@@ -1120,6 +1120,13 @@ impl GenesisPraosLeader {
         })
     }
 
+    pub fn kes_pubkey(&self) -> KesPublicKey {
+        self.0.kes_public_key.clone().into()
+    }
+
+    pub fn vrf_pubkey(&self) -> VrfPublicKey {
+        self.0.vrf_public_key.clone().into()
+    }
 }
 
 #[wasm_bindgen]
@@ -1579,6 +1586,7 @@ impl From<chain::rewards::TaxType> for TaxType {
     }
 }
 
+#[wasm_bindgen]
 impl TaxType {
     pub fn fixed(&self) -> Value {
         self.0.fixed.into()
@@ -1661,6 +1669,10 @@ impl KesPublicKey {
             .map(KesPublicKey)
             .map_err(|_| JsValue::from_str("Malformed kes public key"))
     }
+
+    pub fn to_bech32(&self) -> String {
+        self.0.to_bech32_str()
+    }
 }
 
 #[wasm_bindgen]
@@ -1678,6 +1690,10 @@ impl VrfPublicKey {
         crypto::PublicKey::try_from_bech32_str(&bech32_str)
             .map(VrfPublicKey)
             .map_err(|_| JsValue::from_str("Malformed vrf public key"))
+    }
+
+    pub fn to_bech32(&self) -> String {
+        self.0.to_bech32_str()
     }
 }
 
