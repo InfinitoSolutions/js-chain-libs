@@ -1830,6 +1830,18 @@ impl Witness {
         ))
     }
 
+    /// Generate signature for a legacy icarus utxo-based transaction Input
+    /// This signature will be used to restore LegacyUtxoWitness and then Witness
+    pub fn sign_for_legacy_icarus_utxo(
+        genesis_hash: &Hash,
+        transaction_id: &TransactionSignDataHash,
+        secret_key: &Bip32PrivateKey,
+    ) -> String {
+        let wud = tx::WitnessUtxoData::new(&genesis_hash.0, &transaction_id.0, true);
+        let signature = &secret_key.0.sign(&wud);
+        return signature.to_bech32_str();
+    }
+
     // Witness for a legacy icarus utxo-based transaction generated externally (such as hardware wallets)
     pub fn from_external_legacy_icarus_utxo(
         key: &Bip32PublicKey,
